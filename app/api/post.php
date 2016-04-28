@@ -6,6 +6,20 @@ $app = new \Slim\App;
 
 $app->get('/api/posts', function (Request $request, Response $response) {
 
-    echo  "posts";
+    $sql = "SELECT * FROM posts";
+
+    try{
+        //Gets DB object
+        $db = new DB();
+        //Connection
+        $dbConnection = $db->connect();
+
+        $stmt = $dbConnection->query($sql);
+        $posts = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        echo json_encode($posts);
+    }catch (PDOException $e){
+        echo '{"error": {"text":' . $e->getMessage() . '}}';
+    }
 
 });
